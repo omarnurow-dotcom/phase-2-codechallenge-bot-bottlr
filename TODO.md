@@ -15,4 +15,4 @@
 ## Testing and Verification
 - [x] Start json-server backend
 - [x] Start React app
-- [ ] Verify advanced features work as expected (app running at http://localhost:3000)
+- [x] Verify advanced features work as expected (app running at http://localhost:3000)
