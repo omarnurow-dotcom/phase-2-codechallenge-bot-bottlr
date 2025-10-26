@@ -1,89 +1,29 @@
-import React, { useEffect, useState } from "react";
-import BotCollection from "./components/BotCollection";
-import YourBotArmy from "./components/YourBotArmy";
-import BotSpecs from "./components/BotSpecs";
-import SortBar from "./components/SortBar";
+import { useState } from "react";
 
 function App() {
-  const [bots, setBots] = useState([]);
-  const [army, setArmy] = useState([]);
-  const [selectedBot, setSelectedBot] = useState(null);
-  const [sortBy, setSortBy] = useState("");
-  const [filterClasses, setFilterClasses] = useState([]);
+  const [pepperoniIsChecked, setPepperoniIsChecked] = useState(false);
 
-  // Fetch bots from the local JSON server
-  useEffect(() => {
-    fetch("http://localhost:8001/bots")
-      .then((res) => res.json())
-      .then((data) => setBots(data))
-      .catch((err) => console.error("Error fetching bots:", err));
-  }, []);
-
-  // Filter and sort bots
-  const filteredAndSortedBots = bots
-    .filter(bot => filterClasses.length === 0 || filterClasses.includes(bot.bot_class))
-    .sort((a, b) => {
-      if (!sortBy) return 0;
-      return b[sortBy] - a[sortBy];
-    });
-
-  // Add bot to army (remove from collection, only one per class)
-  const addToArmy = (bot) => {
-    if (!army.find((b) => b.bot_class === bot.bot_class)) {
-      setArmy([...army, bot]);
-      setBots(bots.filter((b) => b.id !== bot.id));
-      setSelectedBot(null);
-    }
-  };
-
-  // Remove bot from army (add back to collection)
-  const removeFromArmy = (bot) => {
-    setArmy(army.filter((b) => b.id !== bot.id));
-    setBots([...bots, bot]);
-  };
-
-  // Delete bot completely (from backend and UI)
-  const deleteBot = (id) => {
-    fetch(`http://localhost:8001/bots/${id}`, { method: "DELETE" })
-      .then(() => {
-        setBots(bots.filter((b) => b.id !== id));
-        setArmy(army.filter((b) => b.id !== id));
-      });
-  };
-
-  // Show bot specs
-  const showBotSpecs = (bot) => {
-    setSelectedBot(bot);
-  };
-
-  // Back to collection
-  const backToCollection = () => {
-    setSelectedBot(null);
-  };
+  function togglePepperoni(e) {
+    setPepperoniIsChecked(e.target.checked);
+  }
 
   return (
-    <div className="App">
-      <h1>🤖 Bot Battlr</h1>
-      <YourBotArmy
-        army={army}
-        removeFromArmy={removeFromArmy}
-        deleteBot={deleteBot}
+    <div>
+      <h1>Select Pizza Toppings</h1>
+      <input
+        type="checkbox"
+        id="pepperoni"
+        checked={pepperoniIsChecked}
+        aria-checked={pepperoniIsChecked}
+        onChange={togglePepperoni}
       />
-      <SortBar
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-        filterClasses={filterClasses}
-        setFilterClasses={setFilterClasses}
-      />
-      {selectedBot ? (
-        <BotSpecs
-          bot={selectedBot}
-          onEnlist={addToArmy}
-          onBack={backToCollection}
-        />
-      ) : (
-        <BotCollection bots={filteredAndSortedBots} onBotClick={showBotSpecs} />
-      )}
+      <label htmlFor="pepperoni">Add pepperoni</label>
+
+      <h2>Your Toppings:</h2>
+      <ul>
+        <li>Cheese</li>
+        {pepperoniIsChecked ? <li>Pepperoni</li> : null}
+      </ul>
     </div>
   );
 }
