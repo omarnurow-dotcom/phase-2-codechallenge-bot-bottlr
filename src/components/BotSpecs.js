@@ -10,8 +10,10 @@ function BotSpecs({ bot, onEnlist, onBack }) {
       <p><strong>Damage:</strong> {bot.damage}</p>
       <p><strong>Armor:</strong> {bot.armor}</p>
       <p><strong>Catchphrase:</strong> {bot.catchphrase}</p>
-      <button onClick={() => onEnlist(bot)}>Enlist</button>
-      <button onClick={onBack}>Back to Collection</button>
+      <div className="spec-actions">
+        <button className="enlist-btn" onClick={() => onEnlist(bot)}>Enlist</button>
+        <button className="back-btn" onClick={onBack}>Back to Collection</button>
+      </div>
     </div>
   );
 }

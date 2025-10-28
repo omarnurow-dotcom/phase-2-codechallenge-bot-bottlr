@@ -1,24 +1,45 @@
 import React from "react";
 
-function BotCard({ bot, handleClick, handleDelete }) {
+function BotCard({ bot, handleClick, handleDelete, addToArmy, isEnlisted }) {
   return (
     <div className="bot-card" onClick={() => handleClick(bot)}>
-      <img src={bot.avatar_url} alt={bot.name} width="150" />
+      <div className="avatar-wrap">
+        <img src={bot.avatar_url} alt={bot.name} width="120" />
+        {isEnlisted ? <span className="badge">Enlisted</span> : null}
+      </div>
       <h3>{bot.name}</h3>
-      <p>Class: {bot.bot_class}</p>
-      <p>Health: {bot.health}</p>
-      <p>Damage: {bot.damage}</p>
-      <p>Armor: {bot.armor}</p>
-      {handleDelete ? (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDelete(bot);
-          }}
-        >
-          ❌ Delete
-        </button>
-      ) : null}
+      <p className="muted">Class: {bot.bot_class}</p>
+      <div className="stats">
+        <span>❤️ {bot.health}</span>
+        <span>⚔️ {bot.damage}</span>
+        <span>🛡️ {bot.armor}</span>
+      </div>
+
+      <div className="card-actions">
+        {addToArmy ? (
+          <button
+            className="add-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              addToArmy(bot);
+            }}
+          >
+            ➕ Add
+          </button>
+        ) : null}
+
+        {handleDelete ? (
+          <button
+            className="delete-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(bot);
+            }}
+          >
+            ❌
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
